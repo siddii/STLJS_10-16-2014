@@ -1,0 +1,308 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>Vert.x - An event-driven polyglot VM!</title>
+
+		<meta name="description" content="Vert.x - An event-driven polyglot VM!">
+		<meta name="author" content="Siddique Hameed">
+
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<link rel="stylesheet" href="css/reveal.min.css">
+		<link rel="stylesheet" href="css/theme/default.css" id="theme">
+
+		<!-- For syntax highlighting -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- If the query includes 'print-pdf', include the PDF print sheet -->
+		<script>
+			if( window.location.search.match( /print-pdf/gi ) ) {
+				var link = document.createElement( 'link' );
+				link.rel = 'stylesheet';
+				link.type = 'text/css';
+				link.href = 'css/print/pdf.css';
+				document.getElementsByTagName( 'head' )[0].appendChild( link );
+			}
+		</script>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+
+        <style type="text/css">
+            .reveal h6 {
+                text-transform: none;
+            }
+            .reveal .intro a:not(.image) {
+                color: #eee8d5;
+            }
+        </style>
+    </head>
+
+	<body>
+
+		<div class="reveal">
+
+			<div class="slides">
+				<section class="intro" data-background="images/IMG_4785.jpg">
+					<h1>Vert.x</h1>
+					<h2>An event-driven polyglot VM!</h2>
+						<h4>By</h4>
+						<h5>Siddique Hameed</h5>
+                        <I><a href="http://twitter.com/siddii">@siddii</a> | <a href="http://github.com/siddii">http://github.com/siddii</a></I><br/><br/>
+                        <h6>STLJS (St. Louis JavaScript) Meetup</h6>
+                        <h6>10/16/2014</h6>
+				</section>
+
+				<section>
+					<h2>Vert.X is...</h2>
+                    <ul>
+                        <li class="fragment">Event-Driven aka <i>asynchronous</i></li>
+                        <li class="fragment">NIO (Non-Blocking I/O) based</li>
+                        <li class="fragment">Light-weight</li>
+                        <li class="fragment">Reactive (<I>See Reactor Pattern - <a href="http://en.wikipedia.org/wiki/Reactor_pattern">http://en.wikipedia.org/wiki/Reactor_pattern</a></I>)</li>
+                        <li class="fragment">Distributed</li>
+                        <li class="fragment">Scalable</li>
+                        <li class="fragment">Resilient</li>
+                        <li class="fragment">Node like but, not a clone :)</li>
+                        <li class="fragment">Isomorphic</li>
+                        <li class="fragment">Polygot!</li>
+                        <li class="fragment">Extensible...</li>
+                    </ul>
+				</section>
+
+                <section ata-transition="slide" data-background="#4d7e65" data-background-transition="slide">
+                    <h2>What do you speak?</h2>
+                        <p class="fragment roll-in">
+                            <img src="images/java.png"/>
+                            <img src="images/javascript.png"/>
+                            <img src="images/ruby.jpeg"/>
+                            <img src="images/python.jpg"/>
+                            <img src="images/groovy.png"/>
+                            <img src="images/clojure.png"/>
+                            <img src="images/scala.jpeg"/>
+                            <img src="images/ceylon_logo.png"/>
+                        </p>
+                </section>
+
+				<section>
+					<h2>Verticles</h2>
+                    <p>The smallest unit of code that runs inside a Vert.x instance. Typically single-threaded.</p>
+                    <p>Many of them can be executed <i>concurrently</i> in different nodes/instances.</p>
+                    <p>Composable units forming pipeline or network of code execution.</p>
+                    <p>Written in a supported <i>programming</i> language of your choice...</p>
+                        <pre><code data-trim>
+var vertx = require('vertx');
+
+vertx.createHttpServer().requestHandler(function(req) {
+    req.response.end("Hi there STLJS!");
+}).listen(8080, 'localhost');
+                        </code></pre>
+				</section>
+
+				<section data-transition="concave">
+					<h2>Modules</h2>
+                    <p>Functional encapsulation of <i>verticles</i>.</p>
+                    <p>Typical Vert.x application is composed of one more more modules.</p>
+                    <p>Uses <i>mod.json</i> as module descriptor</p>
+                    <p>Module registry is available at - <a href="http://modulereg.vertx.io/">http://modulereg.vertx.io/</a></p>
+                    <pre><code data-trim>
+vertx install io.vertx~mod-redis-client~1.1.4
+                    </code></pre>
+				</section>
+
+
+                <section>
+                    <h2>Worker Verticles</h2>
+                    <p>Verticles where you can run <I>blocking</I> calls. Remember JDBC ?</p><br/>
+                    <p>Multi-threaded, where you can perform computationally intensive/blocking operations.</p><br/>
+                    <p>Be careful using this, it won't <i>scale</i>!</p>
+                </section>
+
+                <section data-transition="concave" data-background-image="images/promises1.jpg">
+                    <h2 style="color: darkslategray;">Async <i>huh</i>?</h2>
+                    <ul>
+                        <li style="color: #000000;" class="fragment"><i>JavaScript</i> developers are comfortable with asynchrous style programming due to DOM event handlers, callbacks etc.</li>
+                        <li style="color: #000000;" class="fragment">Java & other languages are catching up on this style</li>
+                        <li style="color: #000000;" class="fragment">No more <i>single</i> thread for every <i>single</i> request</li>
+                        <li style="color: #000000;" class="fragment">Obviously, its <i>easier</i> said than done. </li>
+                        <li style="color: #000000;" class="fragment">So, seek help from promise libraries & modules like <i>mod-rx-vertx</i> which uses <i>RxJava</i> library (inspired by .Net's Reactive extensions)</li>
+                    </ul>
+                </section>
+
+
+                <section>
+                    <h2>Vert.x instances</h2>
+                    <ul>
+                        <li>Where the verticles are run...</li>
+                        <li>A single instance runs inside its own JVM instance</li>
+                        <li>Instances are clustered within the same host or on different hosts across the network forming a <i>distributed</i> event bus</li>
+                        <li>Guaranteed that a single instance will not be executed by more than one thread concurrently</li>
+                    </ul>
+                </section>
+
+                <section data-background-image="images/printed-circuit-board.jpg">
+                    <h2>Distributed Event Bus</h2>
+                    <ul>
+                        <li style="color: #ffffff;" class="fragment">Nervous system of Vert.x!</li>
+                        <li style="color: #ffffff;" class="fragment">Verticles communicate with each other over the distributed event bus.</li>
+                        <li style="color: #ffffff;" class="fragment">Messaging Models
+                            <ol>
+                                <li>Point-to-Point</li>
+                                <li>Request/Response</li>
+                                <li>Publish/Subscribe</li>
+                            </ol>
+                        </li>
+                        <li style="color: #ffffff;" class="fragment">Layer transparent!</li>
+                        <li style="color: #ffffff;" class="fragment">Also available at the browser.Think Firebase, Meteor!</li>
+                        <li style="color: #ffffff;" class="fragment">Demo will be coming shortly.</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>Message Types</h2>
+                    <ul>
+                        <li>number</li>
+                        <li>string</li>
+                        <li>boolean</li>
+                        <li>JSON object</li>
+                        <li>Vert.x Buffer</li>
+                    </ul>
+                </section>
+
+
+				<section>
+					<h2>Shared Data (Maps & Sets)</h2>
+                    <p>Data structure to share across verticles & modules.</p>
+                    <p>Meant to be immutable!</p>
+
+<pre><code data-trim>
+var map = vertx.getMap('myMap');
+map.put('myKey', 'myValue');
+</code></pre>
+
+<pre><code data-trim>
+var set = vertx.getSet('mySet');
+set.add('myValue');
+</code></pre>
+				</section>
+
+
+				<section>
+					<h2>Clusters</h2>
+                    <p>Out-of-box clustering support.</p>
+                    <p>Pluggable clustering manager, default is based on Hazelcast</p>
+				</section>
+
+
+				<section>
+					<h2>High Availability (HA) mode</h2>
+                    <p>Automatic failover support!</p>
+                    <p>Faul tolerant eh...</p>
+                    <p>When a module fails in one node, it will automatically start on another node on the cluster.</p>
+<pre><code data-trim>
+    vertx -ha
+</code></pre>
+                    <p>Demo please...</p>
+
+				</section>
+
+                <section>
+                    <h2>APIs</h2>
+                    <ul>
+                        <li>vertx</li>
+                        <li>vertx/container</li>
+                        <li>vertx/buffer</li>
+                        <li>vertx/console</li>
+                        <li>vertx/datagram</li>
+                        <li>vertx/dns</li>
+                        <li>vertx/event_bus</li>
+                        <li>vertx/file_system</li>
+                        <li>vertx/http</li>
+                        <li>vertx/net</li>
+                        <li>vertx/shared_data
+                        <li>vertx/sockjs
+                        <li>vertx/timer
+                        <li>etc.</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>Container APIs</h2>
+                    <ul>
+                        <li>Used for dynamically deploying & un-deploying verticles and modules</li>
+                    </ul>
+
+<pre><code data-trim>
+/*Deploy 4 instance of verticle.js*/
+container.deployVerticle("verticle.js", 4);
+</code></pre>
+                </section>
+
+                <section>
+                    <h2>Serve what?</h2>
+                    <ul>
+                        <li>HTTP/HTTPS client & server</li>
+                        <li>HTTP methods (GET, PUT, POST etc.)</li>
+                        <li>Supports HTTP chunked transfer encoding</li>
+                        <li>Multipart</li>
+                        <li>WebSockets</li>
+                        <li>SockJS server</li>
+                        <li>etc.</li>
+                    </ul>
+                </section>
+
+                <section data-background-image="images/stop-talking.jpg">
+                    <h1 style="color: #ffffff">Demo</h1>
+                </section>
+
+
+                <section>
+                    <h2>References</h2>
+                    <ul>
+                        <li>http://vertx.io/</li>
+                        <li>http://vertx.io/manual.html</li>
+                        <li>http://vertx.io/core_manual_js.html</li>
+                        <li>https://github.com/vert-x</li>
+                    </ul>
+                </section>
+
+				<section data-background-image="images/end.jpg">
+				</section>
+			</div>
+
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.min.js"></script>
+
+		<script>
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+				slideNumber: true,
+
+				theme: 'moon', // available themes are in /css/theme
+				transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+					{ src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+				]
+			});
+
+		</script>
+
+	</body>
+</html>
